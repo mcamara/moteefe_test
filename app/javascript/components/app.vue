@@ -11,6 +11,7 @@
         v-bind:city="previousSearchItem.city"
         v-bind:categoryId="previousSearchItem.categoryId"
         v-bind:startTime="previousSearchItem.startTime"
+        v-bind:totalEvents="previousSearchItem.totalEvents"
         v-on:previousSearch="search"
         v-bind:key="previousSearchItem.time" />
     </div>
@@ -59,6 +60,7 @@
         searchName: "",
         searchCategoryId: "",
         searchCity: "",
+        searchEmail: "",
         searchStartTime: this.$moment().format('YYYY-MM-DD'),
         lastSearchesList: this.lastSearches()
       }
@@ -66,6 +68,7 @@
     mounted: function()
     {
       this.fetchApiEvents(false)
+      this.checkNewResultsOnPreviousSearches()
     },
     methods: {
       fetchApiEvents: function(store) {
@@ -75,6 +78,7 @@
             categories: [this.searchCategoryId],
             city: this.searchCity,
             start_time: this.searchStartTime,
+            email: this.searchEmail,
             page: this.page
           }
         }).then(response => {
@@ -90,11 +94,12 @@
         this.page = this.page + 1
         this.fetchApiEvents(false)
       },
-      search: function(name, categoryId, city, startTime) {
+      search: function(name, categoryId, city, startTime, email) {
         this.searchName = name
         this.searchCategoryId = categoryId
         this.searchCity = city
         this.searchStartTime = startTime
+        this.searchEmail = email
         this.eventList = []
         this.totalEvents = -1
         this.page = 1

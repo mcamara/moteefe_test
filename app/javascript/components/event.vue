@@ -23,7 +23,7 @@
     props: ['event'],
     methods: {
       searchCategory: function(categoryId) {
-        this.$emit('search', "", categoryId, "")
+        this.$emit('search', "", categoryId, "", "")
       },
       parseTime: function(time) {
         return this.$moment(time).format('dddd, DD MMMM, YYYY, h:mm A')

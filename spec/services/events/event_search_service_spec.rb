@@ -70,5 +70,44 @@ RSpec.describe Events::EventSearchService do
         expect(service.search).to eq([event1, event4])
       end
     end
+
+    describe 'store_search' do
+      describe 'without email' do
+        let(:args) { { start_time: Time.zone.now + 2.days } }
+
+        it 'is not saved' do
+          expect { service.search }.to_not change { Search.count }
+        end
+      end
+
+      describe 'without start date' do
+        let(:args) { { email: 'test@test.com', name: 'blah' } }
+
+        it 'is not saved' do
+          expect { service.search }.to_not change { Search.count }
+        end
+      end
+
+      describe 'without params' do
+        let(:args) { { email: 'test@test.com' } }
+        it 'is not saved' do
+          expect { service.search }.to_not change { Search.count }
+        end
+      end
+
+      describe 'with params and email' do
+        let(:args) { { start_time: Time.zone.now + 2.days, email: 'test@test.com', name: 'blah', categories: [1,2] } }
+        it 'is saved' do
+          expect { service.search }.to change { Search.count }.by(1)
+        end
+
+        it 'contains all search details' do
+          service.search
+          expect(Search.last.email).to eq('test@test.com')
+          expect(Search.last.search_params['name']).to eq('blah')
+          expect(Search.last.search_params['categories']).to eq([1,2])
+        end
+      end
+    end
   end
 end

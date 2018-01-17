@@ -12,6 +12,8 @@ class Event < ApplicationRecord
   has_many :categories_events, dependent: :destroy
   has_many :categories, through: :categories_events
 
+  after_create :notify_users
+
   self.per_page = 24
 
   private
@@ -24,5 +26,15 @@ class Event < ApplicationRecord
   def end_time_after_start_time
     return if end_time > start_time
     errors.add(:end_time, :end_time_should_be_after_start_time)
+  end
+
+  def notify_users
+    Search.where(date: start_time).each do |search|
+      # This search would be completely changed if the search has more than 3 fields
+      next if !search.search_params['name'].blank? && !name.include?(search.search_params['name'])
+      next if !search.search_params['category'].nil? && (categories.map(&:id) & search.search_params['category'].to_a).empty?
+      next if !search.search_params['city'].blank? && search.search_params['city'].to_s != city.name
+      SendEmailWorker.perform_async(email: search.email, message: 'New event that matches your search')
+    end
   end
 end

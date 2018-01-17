@@ -1,12 +1,12 @@
 <template>
-  <button  class="btn btn-xs btn-link ml mr" v-on:click="previousSearch()">
+  <button class="btn btn-xs btn-link ml mr" v-on:click="previousSearch()">
     {{ text() }}
   </button>
 </template>
 
 <script>
   export default {
-    props: ['name', 'city', 'categoryId', 'startTime'],
+    props: ['name', 'city', 'categoryId', 'startTime', 'totalEvents'],
     methods: {
       previousSearch: function() {
         debugger

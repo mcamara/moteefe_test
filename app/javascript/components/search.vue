@@ -31,6 +31,15 @@
           <input type="date" class="form-control" id="start-date" placeholder="Search by name" v-model="startDate" style='width:100%'>
         </div>
       </div>
+      <div class="row mt mb text-center">
+        <div class="col-xs-12">
+          <h5>Subscribe your email to receive alerts when there are new events for your search</h5>
+          <div class="form-group col-xs-12 col-sm-4 col-sm-offset-4">
+            <label class="sr-only" for="email">Email</label>
+            <input type="text" class="form-control" id="email" placeholder="Email address..." v-model="email" style='width:100%'>
+          </div>
+        </div>
+      </div>
       <div class="row text-center mt mb">
         <button type="submit" class="btn btn-primary col-xs-12 col-sm-2 col-sm-offset-5">Search</button>
       </div>
@@ -46,6 +55,7 @@
         name: "",
         city: "",
         categorySelected: "",
+        email: "",
         startDate: this.$moment().format('YYYY-MM-DD')
       }
     },
@@ -54,7 +64,7 @@
     },
     methods: {
       onSubmit: function() {
-        this.$emit('search', this.name, this.categorySelected, this.city, this.startDate)
+        this.$emit('search', this.name, this.categorySelected, this.city, this.startDate, this.email)
       },
       fetchCategories: function() {
         this.$http.get('/api/categories').then(response => {

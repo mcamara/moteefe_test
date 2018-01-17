@@ -9,6 +9,7 @@ class Events::EventSearchService
     search_by_city
     search_by_start_time
     search_by_categories
+    store_search
     @scope.order(start_time: :asc)
   end
 
@@ -33,5 +34,10 @@ class Events::EventSearchService
     categories = @params[:categories].to_a.map(&:to_i).reject(&:zero?)
     return if categories.blank?
     @scope = @scope.joins(:categories).where('categories.id in (?)', categories)
+  end
+
+  def store_search
+    return if @params[:email].blank? || @params[:start_time].blank?
+    Search.find_or_create_by(email: @params.delete(:email), date: @params.delete(:start_time), search_params: @params)
   end
 end

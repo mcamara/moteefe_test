@@ -15,6 +15,7 @@ class Api::EventsController < ApplicationController
       :name,
       :city,
       :start_time,
+      :email,
       categories: []
     )
   end
